@@ -1,0 +1,34 @@
+{
+  "name": "haloceraidsserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.ts",
+    "start:build": "node app.js",
+    "build": "tsc -p . && cp package.json the-ark-service/",
+    "docker:create": "docker build -t halo-hub-api .",
+    "docker:run": "docker run -p 5001:5000 halo-hub-api ",
+    "build:clean": "rm -rf the-ark-service"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.4",
+    "@types/uuid": "^8.3.1",
+    "jest": "^27.0.4",
+    "nodemon": "^2.0.7",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

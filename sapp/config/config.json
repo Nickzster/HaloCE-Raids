@@ -1,0 +1,60 @@
+{
+   "players": {
+       "9bdc0d94292ee845372187165a0fff2e": {
+           "class": "dps"
+       }
+   },
+   "bosses": {},
+   "tags": {
+       "magnum": {
+           "ref": "aerial\\weapons\\magnum\\magnum"
+       },
+       "assault_rifle": {
+           "ref": "aerial\\weapons\\heavy assault rifle\\heavy assault rifle"
+       },
+       "fuel_rod_gun": {
+           "ref": "aerial\\weapons\\big fuelrod gun\\big fuelrod gun"
+       },
+       "chaingun": {
+           "ref": "aerial\\weapons\\chaingun\\chaingun"
+       },
+       "energy_sword": {
+           "ref": "aerial\\weapons\\energy sword\\energy sword"
+       },
+       "gravity_rifle": {
+           "ref": "aerial\\weapons\\gravity rifle\\gravity rifle"
+       },
+       "machete": {
+           "ref": "aerial\\weapons\\machete\\machete"
+       },
+       "needler": {
+           "ref": "aerial\\weapons\\needler\\needler"
+       },
+       "plasma_pistol": {
+           "ref": "aerial\\weapons\\plasma pistol\\plasma pistol"
+       },
+       "plasma_rfile": {
+           "ref": "aerial\\weapons\\plasma rifle\\plasma rifle"
+       },
+       "rocket_launcher": {
+           "ref": "aerial\\weapons\\plasma rifle\\plasma rifle"
+       },
+       "shotgun": {
+           "ref": "aerial\\weapons\\shotgun\\shotgun"
+       },
+       "smg": {
+           "ref": "aerial\\weapons\\smg\\smg"
+       },
+       "super_shotgun": {
+           "ref": "aerial\\weapons\\super shotgun\\super shotgun"
+       }
+   },
+   "items": {
+       "magnum": {
+           "human": "Magnum",
+           "type": "WEAPON",
+           "tag_ref": "magnum",
+           "maxAmmo": 48
+       }
+   }
+}
