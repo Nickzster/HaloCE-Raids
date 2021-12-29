@@ -1,60 +1,131 @@
 {
-   "players": {
-       "9bdc0d94292ee845372187165a0fff2e": {
-           "class": "dps"
-       }
-   },
-   "bosses": {},
-   "tags": {
-       "magnum": {
-           "ref": "aerial\\weapons\\magnum\\magnum"
-       },
-       "assault_rifle": {
-           "ref": "aerial\\weapons\\heavy assault rifle\\heavy assault rifle"
-       },
-       "fuel_rod_gun": {
-           "ref": "aerial\\weapons\\big fuelrod gun\\big fuelrod gun"
-       },
-       "chaingun": {
-           "ref": "aerial\\weapons\\chaingun\\chaingun"
-       },
-       "energy_sword": {
-           "ref": "aerial\\weapons\\energy sword\\energy sword"
-       },
-       "gravity_rifle": {
-           "ref": "aerial\\weapons\\gravity rifle\\gravity rifle"
-       },
-       "machete": {
-           "ref": "aerial\\weapons\\machete\\machete"
-       },
-       "needler": {
-           "ref": "aerial\\weapons\\needler\\needler"
-       },
-       "plasma_pistol": {
-           "ref": "aerial\\weapons\\plasma pistol\\plasma pistol"
-       },
-       "plasma_rfile": {
-           "ref": "aerial\\weapons\\plasma rifle\\plasma rifle"
-       },
-       "rocket_launcher": {
-           "ref": "aerial\\weapons\\plasma rifle\\plasma rifle"
-       },
-       "shotgun": {
-           "ref": "aerial\\weapons\\shotgun\\shotgun"
-       },
-       "smg": {
-           "ref": "aerial\\weapons\\smg\\smg"
-       },
-       "super_shotgun": {
-           "ref": "aerial\\weapons\\super shotgun\\super shotgun"
-       }
-   },
-   "items": {
-       "magnum": {
-           "human": "Magnum",
-           "type": "WEAPON",
-           "tag_ref": "magnum",
-           "maxAmmo": 48
-       }
-   }
+  "players": [
+    {
+      "firebase_id": "c931dce0-c418-42ef-ae3b-07d76426862c",
+      "player": {
+        "version": "abcdef",
+        "hash": "",
+        "player_code": 458715,
+        "loadout": {
+          "secondary_weapon_id": "magnum",
+          "primary_weapon_id": "assault_rifle"
+        },
+        "collection": [
+          "magnum",
+          "assault_rifle",
+          "chaingun",
+          "plasma_rifle",
+          "plasma_pistol",
+          "shotgun",
+          "smg"
+        ],
+        "name": "Nickster",
+        "active_class_id": "ammo",
+        "equipment_id": null
+      }
+    }
+  ],
+  "bosses": [],
+  "tags": [
+    {
+      "firebase_id": "10a86afe-153f-478e-94d8-628465f9ce33",
+      "tag": {
+        "ref": "aerial\\weapons\\energy sword\\energy sword",
+        "key": "energy_sword"
+      }
+    },
+    {
+      "firebase_id": "16cfb235-8d6b-4da2-a3f6-d9cb8958961c",
+      "tag": {
+        "ref": "aerial\\weapons\\heavy assault rifle\\heavy assault rifle",
+        "key": "assault_rifle"
+      }
+    },
+    {
+      "firebase_id": "48e381dc-e4d3-41d0-879e-49d81ee15810",
+      "tag": {
+        "key": "plasma_pistol",
+        "ref": "aerial\\weapons\\plasma pistol\\plasma pistol"
+      }
+    },
+    {
+      "firebase_id": "5b734293-1196-4874-8689-a659fb0d7837",
+      "tag": {
+        "ref": "aerial\\weapons\\smg\\smg",
+        "key": "smg"
+      }
+    },
+    {
+      "firebase_id": "6a633914-9939-4a49-9a13-3119b4261763",
+      "tag": {
+        "ref": "aerial\\weapons\\rocketlauncher\\rocketlauncher",
+        "key": "rocket_launcher"
+      }
+    },
+    {
+      "firebase_id": "71309ddd-87a5-4a5b-94b4-0d741749510c",
+      "tag": {
+        "ref": "aerial\\weapons\\super shotgun\\super shotgun",
+        "key": "super_shotgun"
+      }
+    },
+    {
+      "firebase_id": "7608ac38-625b-4047-8317-6908f4d0e2a8",
+      "tag": {
+        "ref": "aerial\\weapons\\shotgun\\shotgun",
+        "key": "shotgun"
+      }
+    },
+    {
+      "firebase_id": "a02d2a23-5586-4a9b-b785-cd659849a907",
+      "tag": {
+        "ref": "aerial\\weapons\\plasma rifle\\plasma rifle",
+        "key": "plasma_rifle"
+      }
+    },
+    {
+      "firebase_id": "af636bfd-145f-4c83-9869-8fda5e3ebfd5",
+      "tag": {
+        "ref": "aerial\\weapons\\needler\\needler",
+        "key": "needler"
+      }
+    },
+    {
+      "firebase_id": "c19d61d8-aa27-4ffa-a5fe-1108b458635b",
+      "tag": {
+        "key": "gravity_rifle",
+        "ref": "aerial\\weapons\\gravity rifle\\gravity rifle"
+      }
+    },
+    {
+      "firebase_id": "cf34bc9f-0d23-4f8d-8445-1bffeccde57d",
+      "tag": {
+        "key": "fuel_rod_gun",
+        "ref": "aerial\\weapons\\big fuelrod gun\\big fuelrod gun"
+      }
+    },
+    {
+      "firebase_id": "da5a665c-57e0-408f-931c-68e0e00794d2",
+      "tag": {
+        "key": "magnum",
+        "ref": "aerial\\weapons\\magnum\\magnum"
+      }
+    },
+    {
+      "firebase_id": "defb727a-14c4-4a45-b3eb-5b903646132d",
+      "tag": {
+        "key": "chaingun",
+        "ref": "aerial\\weapons\\chaingun\\chaingun"
+      }
+    },
+    {
+      "firebase_id": "e9683e54-1361-4116-95ae-59f8159e6c93",
+      "tag": {
+        "key": "machete",
+        "ref": "aerial\\weapons\\machete\\machete"
+      }
+    }
+  ],
+  "items": [],
+  "sessions": []
 }

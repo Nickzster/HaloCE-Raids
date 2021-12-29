@@ -1,0 +1,39 @@
+{
+  "name": "haloceraidsserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --start",
+    "bootstrap-players": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-players",
+    "bootstrap-items": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-items",
+    "bootstrap-tags": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-tags",
+    "bootstrap-bosses": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-bosses",
+    "bootsrap-sessions": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-sessions",
+    "build-config": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --build-config",
+    "build": "tsc -p . && cp package.json ../admin-client-app/package.json && mkdir -p ../admin-client-app/config && cp config/halo-ce-raids-firebase.json ../admin-client-app/config/",
+    "build:clean": "rm -rf ../admin-client-app",
+    "docker:create": "docker build -t halo-hub-api .",
+    "docker:run": "docker run -p 5001:5000 halo-hub-api "
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.11.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.4",
+    "@types/uuid": "^8.3.1",
+    "jest": "^27.0.4",
+    "nodemon": "^2.0.7",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

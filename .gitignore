@@ -2,3 +2,4 @@ node_modules
 Raids.lua
 halo-ce-raids-firebase.json
 build/
+proxy-client-app/

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/app.ts",
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --bootstrap-tags --bootstrap-players",
     "start:build": "node app.js",
     "build": "tsc -p . && cp package.json the-ark-service/",
     "docker:create": "docker build -t halo-hub-api .",
