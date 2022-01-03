@@ -1,4 +1,15 @@
+export type ItemType =
+  | "ARMOR"
+  | "WEAPON"
+  | "EQUIPMENT"
+  | "BOSS"
+  | "KEY"
+  | "ULTIMATE";
+
+type Classes = "ammo" | "dps" | "medic" | "tank" | "boss";
+
 export interface IPlayer {
+  name: string;
   active_class_id: string;
   equipment_id: string;
   loadout: {
@@ -8,6 +19,8 @@ export interface IPlayer {
   version: string;
   collection: string[];
   player_code: string;
+  password: string;
+  avatar: string;
 }
 
 export interface ITag {
@@ -15,9 +28,32 @@ export interface ITag {
   ref: string;
 }
 
+interface IWeaponProperties {
+  max_ammo: number;
+  damage: number;
+}
+
+interface IArmorProperties {
+  max_health: number;
+}
+
 export interface IItem {
-  key: string;
-  human: string;
+  tag_key: string;
+  type: ItemType;
+  pretty: string;
+  weapon_properties: IWeaponProperties;
+  armor_properties: IArmorProperties;
+  skin: string;
+  shield_power: {
+    percentage: number;
+    int: number;
+  };
+  armor_penetration: {
+    percentage: number;
+    int: number;
+  };
+  accuracy: number;
+  compatibility: { [key in Classes]: boolean };
 }
 
 export interface IBoss {}

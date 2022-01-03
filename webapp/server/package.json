@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --bootstrap-tags --bootstrap-players",
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts",
     "start:build": "node app.js",
     "build": "tsc -p . && cp package.json the-ark-service/",
     "docker:create": "docker build -t halo-hub-api .",
@@ -12,15 +12,21 @@
     "build:clean": "rm -rf the-ark-service"
   },
   "dependencies": {
+    "@firebase/firestore": "^3.4.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-validator": "^6.14.0",
     "firebase-admin": "^9.11.1",
+    "jsonwebtoken": "^8.5.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
     "@types/jest": "^26.0.23",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^15.12.4",
     "@types/uuid": "^8.3.1",
     "jest": "^27.0.4",
