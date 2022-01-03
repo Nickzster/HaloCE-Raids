@@ -24,7 +24,7 @@ class BuildConfig {
   private async buildTags() {
     try {
       /* logic here */
-      const data = await new FirebaseController("tags").get();
+      const data = await new FirebaseController("tags").getAll();
       data.forEach((tag) =>
         this.config.tags.push({ firebase_id: tag.id, tag: tag.item })
       );
@@ -55,7 +55,7 @@ class BuildConfig {
   private async buildPlayers() {
     try {
       /* logic here */
-      const data = await new FirebaseController("players").get();
+      const data = await new FirebaseController("players").getAll();
       data.forEach((player) =>
         this.config.players.push({
           firebase_id: player.id,
