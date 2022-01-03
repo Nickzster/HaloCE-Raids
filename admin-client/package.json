@@ -11,8 +11,9 @@
     "bootstrap-bosses": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --bootstrap-bosses",
     "bootsrap-sessions": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --bootstrap-sessions",
     "build-config": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --build-config",
+    "process-postgame-file": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && nodemon src/app.ts --process-postgame-file",
     "start:build": "node app.js",
-    "build": "tsc -p . && cp package-app.json ../admin-client-app/package.json && mkdir -p ../admin-client-app/config && cp config/halo-ce-raids-firebase.json ../admin-client-app/config/",
+    "build": "tsc -p . && cp package-app.json ../admin-client-app/package.json && mkdir -p ../admin-client-app/config && mkdir -p ../admin-client-app/postgame && cp config/halo-ce-raids-firebase.json ../admin-client-app/config/",
     "build:clean": "rm -rf ../admin-client-app",
     "docker:create": "docker build -t halo-hub-api .",
     "docker:run": "docker run -p 5001:5000 halo-hub-api"

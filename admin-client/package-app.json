@@ -11,6 +11,7 @@
     "bootstrap-bosses": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-bosses",
     "bootsrap-sessions": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --bootstrap-sessions",
     "build-config": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --build-config",
+    "process-postgame-file": "export GOOGLE_APPLICATION_CREDENTIALS='/mnt/c/users/nicho/Documents/My Games/Halo CE/sapp/projects/raids/webapp/server/config/halo-ce-raids-firebase.json' && node app.js --process-postgame-file",
     "build": "tsc -p . && cp package.json ../admin-client-app/package.json && mkdir -p ../admin-client-app/config && cp config/halo-ce-raids-firebase.json ../admin-client-app/config/",
     "build:clean": "rm -rf ../admin-client-app",
     "docker:create": "docker build -t halo-hub-api .",
