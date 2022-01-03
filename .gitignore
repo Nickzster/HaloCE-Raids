@@ -3,3 +3,6 @@ Raids.lua
 halo-ce-raids-firebase.json
 build/
 proxy-client-app/
+raids.config.json
+raids.postgame
+admin-client-app
