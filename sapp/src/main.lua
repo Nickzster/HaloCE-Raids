@@ -6,12 +6,13 @@
 -- import player.player end
 -- import util.file end
 -- import util.json end
+-- import util.GameEvents end
+-- import util.Array end
 --END_IMPORT
 
 TEST_CLASS="dps"
 
 function OnScriptLoad()
-    print(table.concat or "table.concat is NIL!")
     print('\nLoading Script...\n')
     register_callback(cb['EVENT_COMMAND'], "handleCommand")
     register_callback(cb['EVENT_JOIN'], "handleJoin")
@@ -26,8 +27,10 @@ function OnScriptLoad()
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"handleGameEnd")
     register_callback(cb['EVENT_GAME_START'], "handleGameStart")
+
+    GameEvents = Array:new()
     
-    local configTable = readConfigFile('config.json')
+    local configTable = readConfigFile('raids.config.json')
     local playersConfig = configTable['players']
     local tagsConfig = configTable['tags']
 
@@ -54,7 +57,7 @@ function OnScriptLoad()
 end
 
 function OnScriptUnload()
-
+    writeGameEventsToFile()
 
 end
 
@@ -129,6 +132,7 @@ end
 
 function handleCommand(playerIndex, Command, Env, RconPassword ) --number, string, number, string
     if player_present(playerIndex) then
+        local adminLevel = tonumber(get_var(playerIndex, "$lvl"))
         local args = {}
 
         for w in Command:lower():gmatch("%w+") do 
@@ -140,8 +144,12 @@ function handleCommand(playerIndex, Command, Env, RconPassword ) --number, strin
             return false
         end
 
-        if args[1] == "dumpdeltafile" then
-            writeFile(ActivePlayerList:getAllPlayers())
+        if args[1] == "pgfile" and adminLevel == 4 then
+            local itemOne = Array:new()
+            GameEvents:push(Array:new():push("test_function"):push('foo'):push('bar'))
+            GameEvents:push(Array:new():push("test_function"):push('bar'):push('baz'))
+            GameEvents:push(Array:new():push("test_function"):push('foo'):push('baz'))
+            writeGameEventsToFile()
             return false
         end
 
@@ -155,11 +163,12 @@ function handleCommand(playerIndex, Command, Env, RconPassword ) --number, strin
             local foundPlayer = PlayerDatabase:searchByNameAndCode(playerName, playerCode)
 
             if foundPlayer ~= nil then
-                say(playerIndex, "You have successfully been registered.")
+                GameEvents:push(Array:new():push("update_hash"):push(foundPlayer['database_id']):push(playerHash))
                 PlayerDatabase:modifyHash(foundPlayer['database_id'], playerHash)
                 ActivePlayerList:removePlayer(playerIndex)
                 ActivePlayerList:addPlayer(playerIndex)
                 execute_command('kill ' .. playerIndex)
+                say(playerIndex, "You have successfully been registered.")
                 return false
             end
 

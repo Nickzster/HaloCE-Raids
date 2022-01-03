@@ -15,14 +15,15 @@ function readConfigFile(fileName)
     return nil
 end
 
-function writeFile(dataToWrite)
+function writeFile(dataToWrite, fileName)
     local currentTime = os.time(os.date("!*t"))
-    local outFileName = "raids_postgame_" .. currentTime .. ".json"
+    local outFileName = "raids." .. currentTime .. ".postgame"
+    if fileName ~= nil then outFileName = fileName end
     print("Writing file " .. outFileName .. "\n")
     local file = io.open(outFileName, "w")
     if file ~= nil then
         local encodedJSONData = json.encode(dataToWrite)     
         file:write(encodedJSONData)
-        file:close()
     end
+    file:close()
 end
