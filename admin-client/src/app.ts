@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 
 import { bootstrap } from "./bootstrap";
-import { proxyClientLoop } from "./client";
 import BuildConfig from "./lib/BuildConfig";
+import PostGameProcessor from "./lib/PostGameProcessor";
 
 (function main() {
   const args = process.argv;
@@ -76,13 +76,7 @@ import BuildConfig from "./lib/BuildConfig";
         .then((config: any) => {
           console.log("Config Successfully built.");
           console.log(config);
-          const fileLoc = path.join(
-            process.cwd(),
-            "..",
-            "sapp",
-            "config",
-            "config.json"
-          );
+          const fileLoc = path.join(process.cwd(), "..", "raids.config.json");
           console.log("Writing config file to: ", fileLoc);
           fs.writeFileSync(fileLoc, JSON.stringify(config, null, 2));
           process.exit(0);
@@ -94,7 +88,9 @@ import BuildConfig from "./lib/BuildConfig";
         });
     }
 
-    if (arg === "--process-raids-file") {
+    if (arg === "--process-postgame-file") {
+      //Process postgame file here...
+      PostGameProcessor.process("raids.postgame");
     }
 
     if (arg === "--start-sync") {
