@@ -79,6 +79,7 @@ router.post(
         hash: "",
         player_code: generateCode(),
         avatar: "master-chief",
+        level: "player",
       };
 
       await new FirebaseController("players").create(newPlayer, name);
