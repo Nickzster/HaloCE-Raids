@@ -9,30 +9,45 @@
     "build": "tsc -p . && cp package.json the-ark-service/",
     "docker:create": "docker build -t halo-hub-api .",
     "docker:run": "docker run -p 5001:5000 halo-hub-api ",
-    "build:clean": "rm -rf the-ark-service"
+    "build:clean": "rm -rf the-ark-service",
+    "test": "jest"
   },
   "dependencies": {
     "@firebase/firestore": "^3.4.1",
+    "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.14.0",
     "firebase-admin": "^9.11.1",
     "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^3.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^26.0.24",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^15.12.4",
     "@types/uuid": "^8.3.1",
-    "jest": "^27.0.4",
+    "babel-jest": "^27.4.5",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.7",
+    "ts-jest": "^26.5.6",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "json",
+      "node"
+    ],
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
