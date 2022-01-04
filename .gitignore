@@ -6,3 +6,4 @@ proxy-client-app/
 raids.config.json
 raids.postgame
 admin-client-app
+config.temp.ts
