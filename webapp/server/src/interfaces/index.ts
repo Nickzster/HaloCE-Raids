@@ -21,6 +21,7 @@ export interface IPlayer {
   player_code: string;
   password: string;
   avatar: string;
+  level: "banned" | "player" | "admin";
 }
 
 export interface ITag {
