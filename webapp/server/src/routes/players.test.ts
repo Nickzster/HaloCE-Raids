@@ -1,5 +1,5 @@
 import axios from "axios";
-import { configureApp, startApp } from "../util/App";
+import { configureApp, startApp } from "../lib/App";
 import FirebaseController from "../firebase";
 import {
   get,

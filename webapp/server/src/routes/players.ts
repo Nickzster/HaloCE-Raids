@@ -1,14 +1,14 @@
 import express from "express";
 
 import FirebaseController from "../firebase";
-import Response from "../util/Response";
+import Response from "../lib/Response";
 import {
   body,
   query,
   ValidationError,
   validationResult,
 } from "express-validator";
-import Password from "../util/Password";
+import Password from "../lib/Password";
 
 const router = express.Router();
 

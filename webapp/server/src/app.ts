@@ -1,4 +1,4 @@
-import { configureApp, startApp } from "./util/App";
+import { configureApp, startApp } from "./lib/App";
 
 configureApp();
 startApp();
