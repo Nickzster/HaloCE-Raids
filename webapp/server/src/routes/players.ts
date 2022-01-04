@@ -78,17 +78,15 @@ router.post(
         password: await new Password().encrypt(password),
         hash: "",
         player_code: generateCode(),
+        avatar: "master-chief",
       };
 
-      const newRecord = await new FirebaseController("players").create(
-        newPlayer,
-        name
-      );
+      await new FirebaseController("players").create(newPlayer, name);
 
       return new Response()
         .addHttp(200)
         .addHumanMessage("Success")
-        .addData(newRecord)
+        .addData(newPlayer)
         .buildAndSend(res);
     } catch (err) {
       return new Response()
