@@ -20,6 +20,31 @@ jest.mock("../firebase", () =>
   }))
 );
 
+const createBasicString = (name: string, password: string) =>
+  Buffer.from(`${name}:${password}`, "utf-8").toString("base64");
+
+const authenticate = async (name: string, password: string) => {
+  try {
+    const encodedAuthString = Buffer.from(
+      `${name}:${password}`,
+      "utf-8"
+    ).toString("base64");
+
+    const response = await axios.get(
+      "http://localhost:5000/players/authenticate",
+      {
+        headers: {
+          Basic: encodedAuthString,
+        },
+      }
+    );
+
+    return response.data.data.token;
+  } catch (err) {
+    return null;
+  }
+};
+
 describe("Player route tests", () => {
   let server: Server;
   beforeAll(async () => {
@@ -35,17 +60,80 @@ describe("Player route tests", () => {
   });
 
   it("Should be able to fetch a single player", async () => {
-    const response: any = await axios.get(
-      "http://localhost:5000/players/query/Nickster"
-    );
+    try {
+      const name = "Nickster";
+      const password = "foobarfoobaz";
 
-    const playerData = response.data.data;
+      const jwtResponse: any = await axios.get(
+        "http://localhost:5000/players/authenticate",
+        { headers: { Basic: createBasicString(name, password) } }
+      );
 
-    expect(playerData).toBeDefined();
-    expect(playerData.name).toBe("Nickster");
-    expect(playerData.active_class_id).toBe("dps");
-    expect(playerData.avatar).toBe("master-chief");
-    expect(playerData.player_code).toBe(123456);
+      const jwt = jwtResponse.data.data.token;
+
+      expect(jwt).toBeDefined();
+
+      const response: any = await axios.get(
+        `http://localhost:5000/players/get/${name}`,
+        { headers: { "x-haloceraids-token": jwt } }
+      );
+
+      const playerData = response.data.data;
+
+      expect(playerData).toBeDefined();
+      expect(playerData.owner).toBe("Nickster");
+      expect(playerData.active_class_id).toBe("dps");
+      expect(playerData.avatar).toBe("master-chief");
+      expect(playerData.player_code).toBe(123456);
+    } catch (err: any) {
+      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      fail(err);
+    }
+  });
+
+  it("Should fail to look up one player from a different player account.", async () => {
+    try {
+      const name = "Bungie";
+      const password = "foobarfoobaz";
+
+      const jwtResponse: any = await axios.get(
+        "http://localhost:5000/players/authenticate",
+        { headers: { Basic: createBasicString(name, password) } }
+      );
+
+      const jwt = jwtResponse.data.data.token;
+
+      expect(jwt).toBeDefined();
+
+      const response: any = await axios.get(
+        `http://localhost:5000/players/get/Ender`,
+        { headers: { "x-haloceraids-token": jwt } }
+      );
+
+      const playerData = response.data.data;
+
+      fail(playerData);
+    } catch (err: any) {
+      expect(err.response.data.failure.error[0]).toBeDefined();
+      expect(err.response.data.failure.error[0].message).toBe(
+        "You are not authorized to perform this action!"
+      );
+    }
+  });
+
+  it("Should fail to fetch non-existant player", async () => {
+    try {
+      const response: any = await axios.get(
+        "http://localhost:5000/players/get/xpfe5zrm"
+      );
+
+      fail("got response when expected to fail!");
+    } catch (err: any) {
+      expect(err.response.data.http).toBe(404);
+      expect(err.response.data.failure.error[0].message).toBe(
+        "This user does not exist."
+      );
+    }
   });
 
   it("Should fail to create duplicate player", async () => {
@@ -96,11 +184,11 @@ describe("Player route tests", () => {
 
       const playerData = response.data.data;
 
-      expect(playerData.name).toBe("Zack");
+      expect(playerData.owner).toBe("Zack");
       expect(playerData.avatar).toBe("master-chief");
     } catch (err: any) {
-      console.log(err);
-      fail("Did not expect for request to fail.");
+      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      fail(err);
     }
   });
 
@@ -110,13 +198,150 @@ describe("Player route tests", () => {
         "http://localhost:5000/players/query?active_class_id=medic"
       );
 
-      const playerData = response.data.data;
+      const playerData = response.data.data[0];
 
       expect(playerData).toBeDefined();
-      expect(playerData.name).toBe("Ender");
+      expect(playerData.owner).toBe("Ender");
       expect(playerData.active_class_id).toBe("medic");
       expect(playerData.avatar).toBe("master-chief");
       expect(playerData.player_code).toBe(123456);
-    } catch (err) {}
+    } catch (err: any) {
+      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      fail(err);
+    }
+  });
+
+  it("Authentication should fail due to bad credentials", async () => {
+    try {
+      const name = "Ender";
+      const password = "foobarfooba";
+
+      const encodedAuthString = createBasicString(name, password);
+
+      const response = await axios.get(
+        "http://localhost:5000/players/authenticate",
+        {
+          headers: {
+            Basic: encodedAuthString,
+          },
+        }
+      );
+    } catch (err: any) {
+      expect(err.response.data.http).toBe(400);
+      expect(err.response.data.failure).toBeDefined();
+      expect(err.response.data.failure.error[0]).toBeDefined();
+      expect(err.response.data.failure.error[0].message).toBe(
+        "The specified username or password does not match our records."
+      );
+    }
+  });
+
+  it("Should fail to update non-existant player", async () => {
+    try {
+      const name = "xpfe5zrm";
+      const password = "foobarbaz";
+
+      const encodedAuthString = createBasicString(name, password);
+
+      const response = await axios.put(
+        `http://localhost:5000/players/update/${name}`,
+        {
+          hash: "abcdef",
+        },
+        { headers: { Basic: encodedAuthString } }
+      );
+    } catch (err: any) {
+      expect(err.response.data.http).toBe(404);
+      expect(err.response.data.failure.error[0].message).toBe(
+        "This user does not exist."
+      );
+    }
+  });
+
+  it("Should be able to update a player's record", async () => {
+    try {
+      const name = "Bungie";
+      const password = "foobarbaz";
+
+      const encodedAuthString = Buffer.from(
+        `${name}:${password}`,
+        "utf-8"
+      ).toString("base64");
+
+      const response = await axios.put(
+        `http://localhost:5000/players/update/${name}`,
+        {
+          hash: "abcdef",
+        },
+        { headers: { Basic: encodedAuthString } }
+      );
+
+      const responseData = response.data;
+
+      expect(responseData.http).toBe(200);
+      expect(responseData.success.human).toBe("Success");
+      expect(responseData.data.hash).toBe("abcdef");
+    } catch (err: any) {
+      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      fail(err);
+    }
+  });
+
+  it("Authentication should fail due non-existant user", async () => {
+    try {
+      const name = "xpfe5zrm";
+      const password = "foobarfooba";
+
+      const encodedAuthString = Buffer.from(
+        `${name}:${password}`,
+        "utf-8"
+      ).toString("base64");
+
+      const response = await axios.get(
+        "http://localhost:5000/players/authenticate",
+        {
+          headers: {
+            Basic: encodedAuthString,
+          },
+        }
+      );
+    } catch (err: any) {
+      expect(err.response.data.http).toBe(404);
+      expect(err.response.data.failure).toBeDefined();
+      expect(err.response.data.failure.error[0]).toBeDefined();
+      expect(err.response.data.failure.error[0].message).toBe(
+        "This user does not exist!"
+      );
+    }
+  });
+
+  it("Authentication should be successful", async () => {
+    try {
+      const name = "Ender";
+      const password = "foobarfoobaz";
+
+      const encodedAuthString = Buffer.from(
+        `${name}:${password}`,
+        "utf-8"
+      ).toString("base64");
+
+      const response = await axios.get(
+        "http://localhost:5000/players/authenticate",
+        {
+          headers: {
+            Basic: encodedAuthString,
+          },
+        }
+      );
+
+      const responseData = response.data;
+
+      expect(responseData.http).toBe(200);
+      expect(responseData.success.human).toBe("Successfully authenticated.");
+      expect(responseData.data.token).toBeDefined();
+    } catch (err: any) {
+      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      fail(err);
+    }
   });
 });
