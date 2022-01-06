@@ -6,38 +6,37 @@ export interface IAuthData {
 }
 
 class Auth {
-  public constructor(user: IAuthData) {}
+  public constructor() {}
 
   public async N(
-    playerRecord: any,
-    plaintextPassword: string
-  ): Promise<IAuthData | null> {
+    plaintextPassword: string,
+    encryptedPassword: string
+  ): Promise<boolean> {
     try {
-      const same = await new Password().compare({
+      return await new Password().compare({
         password: plaintextPassword,
-        encrypted: playerRecord.password,
+        encrypted: encryptedPassword,
       });
-      if (same)
-        return {
-          name: playerRecord.name,
-          level: playerRecord.level,
-        };
-      return null;
     } catch (error) {
-      return null;
+      return false;
     }
   }
 
-  public async Z(
+  public Z(
     user: IAuthData,
     action: "write" | "read",
     recordToAccess: any
-  ): Promise<boolean> {
+  ): boolean {
+    // User level checks.
     if (user.level === "banned") return false;
     if (user.level === "admin") return true;
-    if (recordToAccess["readable"] === false) return false;
-    if (action === "read") return true;
-    if (action === "write" && recordToAccess["name"] === user.name) return true;
+    // Ensure records belong to players.
+    if (!recordToAccess.owner || recordToAccess.owner === "all!") return false;
+    if (
+      (action === "read" || action === "write") &&
+      recordToAccess.owner === user.name
+    )
+      return true;
     return false;
   }
 }
