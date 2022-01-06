@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
-const buildSamplePlayer = (name: string, activeClassId: string) => ({
+const buildSamplePlayer = (
+  name: string,
+  activeClassId: string,
+  level = "player"
+) => ({
   active_class_id: activeClassId,
   equipment_id: null,
   loadout: {
@@ -17,15 +21,16 @@ const buildSamplePlayer = (name: string, activeClassId: string) => ({
     "shotgun",
     "smg",
   ],
-  name,
-  password: "qwertyuiop123456",
+  owner: name,
+  password: "$2a$10$/hgkRVYD4BW6VxAuWuAnJeoRiJkGMAkBC.mRbuPXyEnQyltvt5agK",
   hash: "",
   player_code: 123456,
   avatar: "master-chief",
+  level,
 });
 
 const samplePlayers = [
-  buildSamplePlayer("Nickster", "dps"),
+  buildSamplePlayer("Nickster", "dps", "admin"),
   buildSamplePlayer("Ender", "medic"),
   buildSamplePlayer("Bungie", "tank"),
 ];
@@ -35,14 +40,14 @@ export const getAll = () => {
 };
 
 export const get = (id: string, withPassword: boolean) => {
-  return samplePlayers.find((item) => item.name === id);
+  return samplePlayers.find((item) => item.owner === id);
 };
 
 export const query = (query: any) => {
   return samplePlayers.reduce((previous: any[], currentItem: any) => {
     let matches = 0;
     for (let key in query) {
-      if (currentItem[key] === query[key]) matches++;
+      if (!!query[key] && currentItem[key] === query[key]) matches++;
     }
 
     if (matches > 0) previous.push(currentItem);
@@ -57,15 +62,25 @@ export const create = (recordToCreate: any, id = uuidv4()) => {
 export const update = (id: string, updatedRecord: any) => {
   const index = samplePlayers.reduce((previous, currentItem, currentIndex) => {
     if (previous !== -1) return previous;
-    if (currentItem.name === id) return currentIndex;
+    if (currentItem.owner === id) return currentIndex;
     return -1;
   }, -1);
 
+  if (index === -1) return null;
+
   let recordToUpdate: any = samplePlayers[index];
 
+  let changes = 0;
   for (let key in updatedRecord) {
-    recordToUpdate[key] = updatedRecord[key];
+    if (!!updatedRecord[key]) {
+      changes++;
+      recordToUpdate[key] = updatedRecord[key];
+    }
   }
 
+  if (changes === 0) return null;
+
   samplePlayers[index] = recordToUpdate;
+
+  return recordToUpdate;
 };
