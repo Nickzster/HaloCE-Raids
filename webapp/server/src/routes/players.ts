@@ -255,7 +255,7 @@ router.get(
 
 router.put(
   "/update/:id",
-  [playerShouldExist(true)],
+  [playerShouldExist(true), authorizeWithJWT("write")],
   async (req: express.Request, res: express.Response) => {
     let newLoadout = undefined;
 
