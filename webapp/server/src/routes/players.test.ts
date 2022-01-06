@@ -64,12 +64,7 @@ describe("Player route tests", () => {
       const name = "Nickster";
       const password = "foobarfoobaz";
 
-      const jwtResponse: any = await axios.get(
-        "http://localhost:5000/players/authenticate",
-        { headers: { Basic: createBasicString(name, password) } }
-      );
-
-      const jwt = jwtResponse.data.data.token;
+      const jwt = await authenticate(name, password);
 
       expect(jwt).toBeDefined();
 
@@ -96,12 +91,7 @@ describe("Player route tests", () => {
       const name = "Bungie";
       const password = "foobarfoobaz";
 
-      const jwtResponse: any = await axios.get(
-        "http://localhost:5000/players/authenticate",
-        { headers: { Basic: createBasicString(name, password) } }
-      );
-
-      const jwt = jwtResponse.data.data.token;
+      const jwt = await authenticate(name, password);
 
       expect(jwt).toBeDefined();
 
@@ -261,19 +251,16 @@ describe("Player route tests", () => {
   it("Should be able to update a player's record", async () => {
     try {
       const name = "Bungie";
-      const password = "foobarbaz";
+      const password = "foobarfoobaz";
 
-      const encodedAuthString = Buffer.from(
-        `${name}:${password}`,
-        "utf-8"
-      ).toString("base64");
+      const jwt = await authenticate(name, password);
 
       const response = await axios.put(
         `http://localhost:5000/players/update/${name}`,
         {
           hash: "abcdef",
         },
-        { headers: { Basic: encodedAuthString } }
+        { headers: { "x-haloceraids-token": jwt } }
       );
 
       const responseData = response.data;
@@ -282,8 +269,34 @@ describe("Player route tests", () => {
       expect(responseData.success.human).toBe("Success");
       expect(responseData.data.hash).toBe("abcdef");
     } catch (err: any) {
-      if (err.response?.data?.failure?.error[0]) fail(err.response.data);
+      if (err.response?.data?.failure?.error[0])
+        fail(JSON.stringify(err.response.data, null, 2));
       fail(err);
+    }
+  });
+
+  it("Should fail to update non-owned record", async () => {
+    try {
+      const name = "Bungie";
+      const password = "foobarfoobaz";
+
+      const jwt = await authenticate(name, password);
+
+      const response = await axios.put(
+        `http://localhost:5000/players/update/Ender`,
+        {
+          hash: "abcdef",
+        },
+        { headers: { "x-haloceraids-token": jwt } }
+      );
+
+      const responseData = response.data;
+
+      fail("Expected to fail");
+    } catch (err: any) {
+      expect(err.response.data.failure.error[0].message).toBe(
+        "You are not authorized to perform this action!"
+      );
     }
   });
 
