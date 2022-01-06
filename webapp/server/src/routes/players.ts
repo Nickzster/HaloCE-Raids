@@ -9,6 +9,10 @@ import {
   validationResult,
 } from "express-validator";
 import Password from "../lib/Password";
+import Auth from "../lib/Auth";
+import JWT from "../lib/JWT";
+import { authorizeWithJWT, playerShouldExist } from "../middleware/players";
+import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
 
@@ -18,9 +22,85 @@ const MAX_RAND = 999999;
 const generateCode = () =>
   Math.floor(Math.random() * (MAX_RAND - MIN_RAND) + MIN_RAND);
 
+/* 
+  Method: GET
+  Resource: /players/authn
+  Description: Authenticates a user.
+*/
+
+router.get(
+  "/authenticate",
+  [],
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const encodedBasicString = req.header("Basic");
+      if (!encodedBasicString)
+        return new Response()
+          .addHttp(400)
+          .addError({ tag: "", message: "String not found in header!" })
+          .buildAndSend(res);
+
+      const [name, password] = Buffer.from(encodedBasicString, "base64")
+        .toString("utf-8")
+        .split(":");
+
+      const playerRecord = await new FirebaseController("players").get(name);
+
+      if (!playerRecord)
+        return new Response()
+          .addHttp(404)
+          .addError({ tag: "name", message: "This user does not exist!" })
+          .buildAndSend(res);
+
+      const isAuthenticated = await new Auth().N(
+        password,
+        playerRecord.password
+      );
+
+      if (!isAuthenticated) {
+        return new Response()
+          .addHttp(400)
+          .addError({
+            tag: "password",
+            message:
+              "The specified username or password does not match our records.",
+          })
+          .buildAndSend(res);
+      }
+
+      const jwt = new JWT().generateToken({
+        name: playerRecord.owner,
+        level: playerRecord.level,
+      });
+
+      return new Response()
+        .addHttp(200)
+        .addHumanMessage("Successfully authenticated.")
+        .addData({ token: jwt })
+        .buildAndSend(res);
+    } catch (err) {
+      return new Response()
+        .addHttp(500)
+        .addError({
+          tag: "server_error",
+          message: "An internal server error has occured.",
+        })
+        .addData(err)
+        .buildAndSend(res);
+    }
+  }
+);
+
+/* 
+  Method: POST
+  Resource: /players/create
+  Description: Creates a new player.
+*/
+
 router.post(
   "/create",
   [
+    playerShouldExist(false),
     body("name")
       .isString()
       .isLength({ max: 11 })
@@ -49,14 +129,6 @@ router.post(
         return response.buildAndSend(res);
       }
 
-      const playerExists = await new FirebaseController("players").get(name);
-
-      if (!!playerExists)
-        return new Response()
-          .addHttp(400)
-          .addError({ tag: "name", message: "This user already exists!" })
-          .buildAndSend(res);
-
       const newPlayer = {
         active_class_id: "dps",
         equipment_id: null,
@@ -74,7 +146,7 @@ router.post(
           "shotgun",
           "smg",
         ],
-        name,
+        owner: name,
         password: await new Password().encrypt(password),
         hash: "",
         player_code: generateCode(),
@@ -102,6 +174,12 @@ router.post(
   }
 );
 
+/* 
+  Method: GET
+  Resource: /players/query
+  Description: Query a player. See query object for query inputs. 
+*/
+
 router.get(
   "/query",
   [],
@@ -111,7 +189,7 @@ router.get(
 
       const query = {
         active_class_id,
-        name,
+        owner: name,
         page,
       };
 
@@ -135,28 +213,26 @@ router.get(
   }
 );
 
+/* 
+  Method: GET
+  Resource: /players/get/:name
+  Description: Look up the player by id (name).
+*/
+
 router.get(
-  "/query/:name",
-  [],
+  "/get/:id",
+  [playerShouldExist(true), authorizeWithJWT("read")],
   async (req: express.Request, res: express.Response) => {
     try {
-      const name = req.params.name;
+      const name = req.params.id;
 
       const result = await new FirebaseController("players").get(name);
-
-      if (!!result)
-        return new Response()
-          .addHttp(200)
-          .addHumanMessage("Success")
-          .addData(result)
-          .buildAndSend(res);
+      // const result = req.body.record;
 
       return new Response()
-        .addHttp(404)
-        .addError({
-          tag: "not_found",
-          message: "The requested resource could not be found.",
-        })
+        .addHttp(200)
+        .addHumanMessage("Success")
+        .addData(result)
         .buildAndSend(res);
     } catch (err) {
       return new Response()
@@ -171,12 +247,16 @@ router.get(
   }
 );
 
-router.put(
-  "/update/:name",
-  [],
-  async (req: express.Request, res: express.Response) => {
-    //TODO: Needs to be an authenticated/authorized route.
+/* 
+  Method: PUT
+  Resource: /players/update/:name
+  Description: Update a player's data.
+*/
 
+router.put(
+  "/update/:id",
+  [playerShouldExist(true)],
+  async (req: express.Request, res: express.Response) => {
     let newLoadout = undefined;
 
     //TODO: Refactor loadouts to be customizable.
@@ -228,13 +308,13 @@ router.put(
     }
 
     try {
-      const name = req.params.name;
+      const name = req.params.id;
 
       const updates = {
         active_class_id: req.body.active_class_id,
         equipment_id: req.body.equipment_id,
         loadout: newLoadout,
-        version: "qwertyuiop",
+        version: uuidv4(),
         collection: req.body.collection,
         password: !!req.body.password
           ? await new Password().encrypt(req.body.password)
@@ -246,12 +326,6 @@ router.put(
         name,
         updates
       );
-
-      if (!updatedRecord)
-        return new Response()
-          .addHttp(200)
-          .addHumanMessage("No changes were made.")
-          .buildAndSend(res);
 
       return new Response()
         .addHttp(200)
@@ -270,6 +344,12 @@ router.put(
     }
   }
 );
+
+/* 
+  Method: DELETE
+  Resource: /players/remove
+  Description: Delete a player from the database.
+*/
 
 router.delete(
   "/remove",
