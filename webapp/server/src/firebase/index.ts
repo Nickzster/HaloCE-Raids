@@ -43,11 +43,9 @@ class FirebaseController {
     return returnedItems;
   }
 
-  public async get(id: string, withPassword: boolean = false) {
+  public async get(id: string) {
     const fbRef = this.db.collection(this.collectionName);
     const data = await (await fbRef.doc(id).get()).data();
-    if (!withPassword && !!data && data["password"])
-      data["password"] = undefined;
     return data;
   }
 
@@ -94,7 +92,7 @@ class FirebaseController {
 
   public async update(id: string, updatedRecord: any) {
     try {
-      const recordToUpdate = await this.get(id, true);
+      const recordToUpdate = await this.get(id);
 
       if (!recordToUpdate) return null;
 
